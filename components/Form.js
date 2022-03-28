@@ -1,44 +1,64 @@
-import { StyleSheet, Text, TextInput, Button, View } from "react-native";
-import { useState } from "react";
+import { View, StyleSheet, Button, TextInput } from "react-native";
+import { gStyles } from "../styles/gStyles";
+import { Formik } from "formik";
 
-export default function Form({ onAddItem }) {
-  const [text, setText] = useState("");
-
-  const onChangeText = (enteredText) => {
-    setText(enteredText);
-  };
-
-  const onPress = () => {
-    setText("");
-    return onAddItem(text);
-  };
-
+export default function Form({ onAddArticle }) {
   return (
     <View>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeText}
-        placeholder="Enter a todo..."
-        value={text}
-      />
-      <View style={styles.button}>
-        <Button title="Add todo" onPress={onPress} />
-      </View>
+      <Formik
+        initialValues={{
+          name: "",
+          anons: "",
+          fullText: "",
+          img: "",
+        }}
+        onSubmit={(values, action) => {
+          onAddArticle(values);
+          action.resetForm();
+        }}
+      >
+        {(props) => (
+          <View>
+            <TextInput
+              style={styles.input}
+              value={props.values.name}
+              placeholder="Enter a name"
+              onChangeText={props.handleChange("name")}
+            />
+            <TextInput
+              style={styles.input}
+              value={props.values.anons}
+              placeholder="Enter a anons"
+              onChangeText={props.handleChange("anons")}
+              multiline
+            />
+            <TextInput
+              style={styles.input}
+              value={props.values.fullText}
+              placeholder="Enter an article"
+              onChangeText={props.handleChange("fullText")}
+              multiline
+            />
+            <TextInput
+              style={styles.input}
+              value={props.values.img}
+              placeholder="Enter image uri"
+              onChangeText={props.handleChange("img")}
+            />
+            <Button title="Add article" onPress={props.handleSubmit} />
+          </View>
+        )}
+      </Formik>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    borderBottomWidth: 1,
+    borderWidth: 1,
+    marginVertical: 10,
     padding: 10,
-    marginVertical: 30,
-    marginHorizontal: "20%",
-    backgroundColor: "silver",
-  },
-  button: {
-    width: "45%",
-    color: "black",
-    margin: "auto",
+    borderColor: "silver",
+    borderRadius: 5,
   },
 });
